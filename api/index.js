@@ -48,12 +48,15 @@ app.post("/api/signup", async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
     const user = await User.create({ name, phone, upi_id, password: hashed });
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     res.json({ token, user });
   } catch (err) {
-    res.status(500).json({ error: "Signup failed" });
+    console.error("Signup Error:", err); // <--- log the error
+    res.status(500).json({ error: "Signup failed", details: err.message });
   }
 });
+
 
 // Login (by name or phone)
 app.post("/api/login", async (req, res) => {
