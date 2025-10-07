@@ -195,9 +195,13 @@ app.get("/api/dashboard", auth, async (req, res) => {
 });
 
 app.get("/", async (req, res) => {
+  const mongoStatus = mongoose.connection.readyState === 1 ? "✅ MongoDB connected" : "❌ MongoDB not connected";
+  const envStatus = process.env.MONGO_URI && process.env.JWT_SECRET ? "✅ Env variables loaded" : "❌ Env variables missing";
+
   res.json({
     message: "🎉 Welcome to the serverless function of Splitwise! This is a secured backend.",
-    
+    mongoStatus,
+    envStatus
   });
 });
 
